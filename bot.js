@@ -48,7 +48,7 @@ function matchFAQ(message) {
 }
 
 /* ============ CONFIG — your Gemini key ============ */
-const GEMINI_API_KEY = "AIzaSyBt18xgZaLy8hcYdv_vPU-9wy7CZZ8XDsw"; // ←------------------------------------------
+const GEMINI_API_KEY = "AIzaSyDJAygb4PnXb6c7ouHbpBx8j_i6F_z2RIA"; // ←------------------------------------------
 
 const SYSTEM_PROMPT = "You are the EmoTiPaw Bot, a friendly assistant for a web-based English slang learning game. Explain slang words simply with short example sentences. Help with game tips. Keep replies to 2-4 sentences. Only discuss slang, English, or the EmoTiPaw game. Be friendly and fun.";
 
