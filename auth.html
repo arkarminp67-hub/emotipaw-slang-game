@@ -1,0 +1,209 @@
+<!-- auth.html — SlangQuest (Login & Sign Up with JS) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SlangQuest — Login / Sign Up</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">
+        <span class="logo" aria-hidden="true"></span>
+        <span class="brand-name">EmoTiPaw</span>
+      </a>
+      <nav class="menu">
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#progress">Progress</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- AUTH -->
+  <main class="auth">
+    <div class="wrap auth-wrap">
+      <div class="auth-card card">
+        <!-- Tabs -->
+        <div class="tabs js-tabs">
+          <button class="tab is-active" data-tab="login">Log in</button>
+          <button class="tab" data-tab="signup">Sign up</button>
+          <span class="glider" aria-hidden="true"></span>
+        </div>
+
+        <!-- LOGIN -->
+        <form id="loginForm" class="form" autocomplete="on" novalidate>
+          <h1 class="form-title">Welcome back</h1>
+
+          <label class="fi">
+            <span>Email</span>
+            <input id="loginEmail" type="email" name="email" placeholder="you@example.com" required>
+          </label>
+
+          <label class="fi">
+            <span>Password</span>
+            <div class="pw">
+              <input id="loginPassword" type="password" name="password" placeholder="••••••••" minlength="6" required>
+              <button class="pw-toggle" type="button" data-target="loginPassword"
+                aria-label="Show/Hide password">👁</button>
+            </div>
+          </label>
+
+          <!-- removed Remember/Demo row -->
+
+          <button class="btn xl wfull" type="submit">Log in</button>
+
+          <p class="muted center sm next-link">
+            No account?
+            <button class="link-arrow js-switch" data-to="signup" type="button">
+              Create one <span class="arrow">➜</span>
+            </button>
+          </p>
+        </form>
+
+        <!-- SIGN UP -->
+        <form id="signupForm" class="form is-hidden" autocomplete="on" novalidate>
+          <h1 class="form-title">Create your account</h1>
+
+          <label class="fi">
+            <span>Nickname</span>
+            <input id="suNickname" type="text" name="nickname" placeholder="e.g., Nova" maxlength="24" required>
+          </label>
+
+          <label class="fi">
+            <span>Email</span>
+            <input id="suEmail" type="email" name="email" placeholder="you@example.com" required>
+          </label>
+
+          <label class="fi">
+            <span>Password</span>
+            <div class="pw">
+              <input id="suPassword" type="password" name="password" placeholder="min. 6 characters" minlength="6"
+                required>
+              <button class="pw-toggle" type="button" data-target="suPassword"
+                aria-label="Show/Hide password">👁</button>
+            </div>
+          </label>
+
+          <label class="fi">
+            <span>Confirm password</span>
+            <div class="pw">
+              <input id="suConfirm" type="password" name="confirm" placeholder="repeat password" minlength="6" required>
+              <button class="pw-toggle" type="button" data-target="suConfirm"
+                aria-label="Show/Hide password">👁</button>
+            </div>
+          </label>
+
+          <!-- add tracking -->
+          <input type="hidden" name="date" id="suDate">
+          <input type="hidden" name="week" id="suWeek">
+
+
+          <!-- removed Terms checkbox -->
+
+          <button class="btn xl wfull" type="submit">Sign up</button>
+
+          <!-- removed "Already have an account?" row -->
+        </form>
+      </div>
+
+      <!-- Toast / messages -->
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p>© <span id="year">2025</span> EmoTiPaw · Prototype for study use</p>
+      <nav class="foot-links">
+        <a href="index.html#survey">Survey</a>
+        <a href="index.html#privacy">Privacy</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="https://discord.gg/CzX42cQK" target="_blank" class="discord-link">
+          <svg width="22" height="22" viewBox="0 0 127.14 96.36" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,48,6.83,72.37,72.37,0,0,0,44.64,0,105.89,105.89,0,0,0,18.39,8.09C2.62,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36a77.7,77.7,0,0,0,6.73-11A68.42,68.42,0,0,1,28.1,80.21a54.31,54.31,0,0,0,68.16,0A68.07,68.07,0,0,1,87.7,85.3a77,77,0,0,0,6.74,11A105.26,105.26,0,0,0,126.6,80.23h0C129.09,52.75,121.72,29,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5.05-12.74,11.43-12.74S53.86,46,53.86,53,48.72,65.69,42.45,65.69Zm42.24,0C78.42,65.69,73.24,60,73.24,53s5.05-12.74,11.43-12.74S96.1,46,96.1,53,90.93,65.69,84.69,65.69Z"
+              fill="#5865F2" />
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+
+  <!-- Add this tracking script BELOW main JS -->
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const nickname = document.getElementById("suNickname").value;
+      const email = document.getElementById("suEmail").value;
+
+      // Add date & week info
+      const now = new Date();
+      const date = now.toLocaleDateString();
+
+      // 🔹 set launch date
+      const launchDate = new Date("2025-10-26");
+      const diffInMs = now - launchDate;
+      const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7)) + 1;
+      const week = "Week " + diffInWeeks;
+
+      const data = {
+        data: [{
+          nickname: nickname,
+          email: email,
+          date: date,
+          week: week,
+        }]
+      };
+
+      fetch("https://sheetdb.io/api/v1/cy20viq6veajs", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      });
+      localStorage.setItem("sq.currentUser", JSON.stringify({ nickname }));
+
+    });
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      // fetch user by email
+      fetch(`https://sheetdb.io/api/v1/cy20viq6veajs/search?email=${email}`)
+        .then(res => res.json())
+        .then(users => {
+          if (users.length === 0) {
+            alert("User not found!");
+            return;
+          }
+
+          const user = users[0];
+
+          // ✅ save nickname to localStorage
+          localStorage.setItem("nickname", user.nickname);
+
+          // redirect to game or next page
+          window.location.href = "play.html";
+        })
+        .catch(err => console.error(err));
+    });
+
+  </script>
+
+</body>
+
+</html>

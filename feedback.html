@@ -1,0 +1,148 @@
+<!-- feedback.html — SlangQuest Results & Feedback -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SlangQuest — Feedback</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="wrap nav">
+      <!-- brand now goes to Achievements -->
+      <a class="brand" href="index.html">
+        <span class="logo" aria-hidden="true"></span>
+        <span class="brand-name">EmoTiPaw</span>
+      </a>
+      <!-- Top nav icons -->
+      <nav class="menu nav-icons">
+        <!-- Achievements -->
+        <a class="nav-ico" href="achievement.html" title="Achievements">🏆</a>
+        <!-- Play / Chat -->
+        <a class="nav-ico" href="play.html" title="Play / Chat">💬</a>
+        <!-- Progress / Feedback -->
+        <a class="nav-ico" href="feedback.html" title="Progress / Feedback">📊</a>
+        <a class="nav-ico" href="dashboard.html" title="Dashboard">📈</a>
+        <!-- Bot: add .bot-trigger so bot.js can open the modal -->
+        <a class="nav-ico bot-trigger" href="#" title="Bot" aria-controls="botModal">🤖</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- FEEDBACK -->
+  <main class="play">
+    <div class="wrap play-wrap">
+
+      <!-- Top summary card (matches your prototype structure) -->
+      <section class="card">
+        <h2 class="section-title">Your Quest Feedback</h2>
+        <p class="muted" id="summaryLine">
+          Congratulations on completing your quest! Here's how you did:
+        </p>
+
+        <!-- Score Summary -->
+        <div class="panel" style="margin-top:10px">
+          <h3 class="ch-title">Score Summary</h3>
+          <div class="stats-grid">
+            <div class="donut-wrap">
+              <!-- SVG donut chart will render here -->
+              <svg id="donut" class="donut" viewBox="0 0 36 36" aria-label="overall score chart">
+                <!-- back ring -->
+                <circle class="donut-ring" cx="18" cy="18" r="15.915"></circle>
+                <!-- correct slice -->
+                <circle id="donut-correct" class="donut-segment-c" cx="18" cy="18" r="15.915" stroke-dasharray="0 100"
+                  stroke-dashoffset="25"></circle>
+                <!-- wrong slice -->
+                <circle id="donut-wrong" class="donut-segment-w" cx="18" cy="18" r="15.915" stroke-dasharray="0 100"
+                  stroke-dashoffset="25"></circle>
+                <text id="donut-label" x="18" y="20.5" text-anchor="middle" class="donut-label">0%</text>
+              </svg>
+            </div>
+            <ul class="stat-lines">
+              <li><strong id="totalCorrect">0</strong> correct</li>
+              <li><strong id="totalWrong">0</strong> wrong</li>
+              <li><strong id="totalQuestions">0</strong> total</li>
+            </ul>
+          </div>
+          <p class="muted" id="summaryNote" style="margin-top:8px"></p>
+        </div>
+
+        <!-- Personalized Tips -->
+        <div class="panel" style="margin-top:14px">
+          <h3 class="ch-title">Personalized Tips</h3>
+          <ul id="tipsList" class="muted" style="margin:6px 0 0 18px"></ul>
+        </div>
+
+        <!-- Per-level results -->
+        <div class="panel" style="margin-top:14px">
+          <h3 class="ch-title">Per-Level Breakdown</h3>
+          <div id="levelsGrid" class="levels-grid"></div>
+        </div>
+
+        <!-- Motivational -->
+        <div class="panel" style="margin-top:14px">
+          <h3 class="ch-title">Motivational Message</h3>
+          <p id="motivation" class="muted">Keep pushing forward!</p>
+        </div>
+
+        <div class="actions" style="margin-top:14px">
+          <a class="btn" href="play.html">Play Again</a>
+          <button id="resetResults" class="btn ghost" type="button" title="Clear saved results">Clear Results</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p>© <span id="year">2025</span> EmoTiPaw · Prototype for study use</p>
+      <nav class="foot-links">
+        <a href="index.html#privacy">Privacy</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="https://discord.gg/CzX42cQK" target="_blank" class="discord-link">
+          <svg width="22" height="22" viewBox="0 0 127.14 96.36" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,48,6.83,72.37,72.37,0,0,0,44.64,0,105.89,105.89,0,0,0,18.39,8.09C2.62,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36a77.7,77.7,0,0,0,6.73-11A68.42,68.42,0,0,1,28.1,80.21a54.31,54.31,0,0,0,68.16,0A68.07,68.07,0,0,1,87.7,85.3a77,77,0,0,0,6.74,11A105.26,105.26,0,0,0,126.6,80.23h0C129.09,52.75,121.72,29,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5.05-12.74,11.43-12.74S53.86,46,53.86,53,48.72,65.69,42.45,65.69Zm42.24,0C78.42,65.69,73.24,60,73.24,53s5.05-12.74,11.43-12.74S96.1,46,96.1,53,90.93,65.69,84.69,65.69Z"
+              fill="#5865F2" />
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Chatbot Modal (INSIDE body, before scripts) -->
+  <div id="botModal" class="bot-modal hidden" aria-hidden="true" role="dialog" aria-label="Chat with SlangQuest Bot">
+    <div class="bot-sheet">
+      <header class="bot-head">
+        <div class="bot-title">EmoTiPaw</div>
+        <button id="botClose" class="bot-x" aria-label="Close">✖</button>
+      </header>
+
+      <div id="chat-window" class="bot-body">
+        <div class="msg bot">
+          <div class="bubble">Hey! Ask me about slang meanings, examples, or quiz help. 👋</div>
+        </div>
+      </div>
+
+      <form id="botForm" class="bot-foot">
+        <input id="chat-input" type="text" placeholder="Type your message..." autocomplete="off" required />
+        <button class="btn" type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts (bot.js LAST so it can find the DOM) -->
+  <script src="feedback.js"></script>
+  <script src="bot.js"></script>
+</body>
+
+</html>

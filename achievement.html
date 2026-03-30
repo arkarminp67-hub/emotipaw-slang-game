@@ -1,0 +1,213 @@
+<!-- achievement.html — SlangQuest (Progress tracker + Achievements) -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SlangQuest — Achievements</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">
+        <span class="logo" aria-hidden="true"></span>
+        <span class="brand-name">EmoTiPaw</span>
+      </a>
+
+      <!-- Top nav icons (🏆 = current page) -->
+      <nav class="menu nav-icons">
+        <a class="nav-ico" href="achievement.html" title="Achievements">🏆</a>
+        <a class="nav-ico" href="play.html" title="Play / Chat">💬</a>
+        <a class="nav-ico" href="feedback.html" title="Progress / Feedback">📊</a>
+        <a class="nav-ico" href="dashboard.html" title="Dashboard">📈</a>
+        <!-- IMPORTANT: add .bot-trigger so bot.js can open the modal -->
+        <a class="nav-ico bot-trigger" href="#" title="Bot" aria-controls="botModal">🤖</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="play">
+    <div class="wrap play-wrap">
+      <!-- Progress tracker -->
+      <section class="card panel">
+        <h2 class="section-title" style="margin-top:0">Progress Tracker</h2>
+
+        <div class="bar" aria-label="Overall progress">
+          <span id="overallFill" class="bar-fill" style="width:0%"></span>
+        </div>
+        <p id="overallText" class="muted" style="margin:10px 0 0">0 correct out of 0 (0%)</p>
+      </section>
+
+      <!-- Tiers -->
+      <section class="card">
+        <h3 class="ch-title">Tiers</h3>
+        <div class="grid-3" id="tiers">
+          <div class="panel" id="tier-basic" aria-live="polite">
+            <div class="icon">🌱</div>
+            <div class="value">Basic Quests</div>
+            <p class="hint">Start your journey</p>
+          </div>
+          <div class="panel" id="tier-mid">
+            <div class="icon">🧭</div>
+            <div class="value">Intermediate</div>
+            <p class="hint">Solid progress</p>
+          </div>
+          <div class="panel" id="tier-adv">
+            <div class="icon">🚀</div>
+            <div class="value">Advanced</div>
+            <p class="hint">Master of slang</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Achievements -->
+      <section class="card">
+        <h3 class="ch-title">Achievements</h3>
+        <ul class="badges" id="badgesRow" style="flex-wrap:wrap"></ul>
+        <p id="noBadges" class="muted" style="margin-top:8px">Play a few levels to unlock badges!</p>
+      </section>
+
+      <!-- Areas for Improvement -->
+      <section class="card">
+        <h3 class="ch-title">Areas for Improvement</h3>
+        <div class="panel" id="improveBox">
+          <p class="muted" id="improveText">
+            We’ll show helpful tips here once you’ve completed at least one level.
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Celebration overlay for consistency (optional) -->
+  <div id="celebrate" class="celebrate" aria-hidden="true"></div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p>© <span id="year">2025</span> EmoTiPaw · Prototype for study use</p>
+      <nav class="foot-links">
+        <a href="index.html#privacy">Privacy</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="https://discord.gg/CzX42cQK" target="_blank" class="discord-link">
+          <svg width="22" height="22" viewBox="0 0 127.14 96.36" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,48,6.83,72.37,72.37,0,0,0,44.64,0,105.89,105.89,0,0,0,18.39,8.09C2.62,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36a77.7,77.7,0,0,0,6.73-11A68.42,68.42,0,0,1,28.1,80.21a54.31,54.31,0,0,0,68.16,0A68.07,68.07,0,0,1,87.7,85.3a77,77,0,0,0,6.74,11A105.26,105.26,0,0,0,126.6,80.23h0C129.09,52.75,121.72,29,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5.05-12.74,11.43-12.74S53.86,46,53.86,53,48.72,65.69,42.45,65.69Zm42.24,0C78.42,65.69,73.24,60,73.24,53s5.05-12.74,11.43-12.74S96.1,46,96.1,53,90.93,65.69,84.69,65.69Z"
+              fill="#5865F2" />
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Chatbot Modal (MOVED inside <body>, just before scripts) -->
+  <div id="botModal" class="bot-modal hidden" aria-hidden="true" role="dialog" aria-label="Chat with SlangQuest Bot">
+    <div class="bot-sheet">
+      <header class="bot-head">
+        <div class="bot-title">SlangQuest Bot</div>
+        <button id="botClose" class="bot-x" aria-label="Close">✖</button>
+      </header>
+
+      <div id="chat-window" class="bot-body">
+        <!-- messages get appended here -->
+        <div class="msg bot">
+          <div class="bubble">Hey! Ask me about slang meanings, examples, or quiz help. 👋</div>
+        </div>
+      </div>
+
+      <form id="botForm" class="bot-foot">
+        <input id="chat-input" type="text" placeholder="Type your message..." autocomplete="off" required />
+        <button class="btn" type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Page script -->
+  <script>
+    const CUR_KEY = 'sq.currentUser';
+    const RESULTS_KEY = 'sq.results';
+
+    const y = document.getElementById('year'); if (y) y.textContent = String(new Date().getFullYear());
+
+    const user = JSON.parse(localStorage.getItem(CUR_KEY) || 'null');
+    if (!user) location.href = 'auth.html?next=achievement.html';
+
+    const results = JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]');
+    const totalCorrect = results.reduce((s, r) => s + (Number(r.score) || 0), 0);
+    const totalQs = results.reduce((s, r) => s + (Number(r.total) || 0), 0);
+    const levelsDone = results.length;
+    const percent = totalQs ? Math.round((totalCorrect / totalQs) * 100) : 0;
+
+    const fill = document.getElementById('overallFill');
+    const txt = document.getElementById('overallText');
+    if (fill) fill.style.width = (percent || 0) + '%';
+    if (txt) txt.textContent = `${totalCorrect} correct out of ${totalQs} (${percent}%)`;
+
+    function activate(id, active) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.opacity = active ? '1' : '.55';
+      el.style.border = active ? '1px solid rgba(255,255,255,.18)' : '1px solid rgba(255,255,255,.08)';
+    }
+    activate('tier-basic', levelsDone > 0);
+    activate('tier-mid', levelsDone >= 5 || percent >= 50);
+    activate('tier-adv', levelsDone >= 10 || percent >= 80);
+
+    const badgesRow = document.getElementById('badgesRow');
+    const noBadges = document.getElementById('noBadges');
+
+    function addBadge(emoji, label) {
+      const li = document.createElement('li');
+      li.className = 'badge';
+      li.style.display = 'flex';
+      li.style.alignItems = 'center';
+      li.style.gap = '8px';
+      li.innerHTML = `<span style="font-size:20px">${emoji}</span><span>${label}</span>`;
+      badgesRow.appendChild(li);
+      noBadges && (noBadges.style.display = 'none');
+    }
+
+    if (levelsDone >= 1) addBadge('🥉', 'First Quest — finished a level');
+    if (levelsDone >= 3) addBadge('🥈', 'On a Roll — 3+ levels complete');
+    if (levelsDone >= 7) addBadge('🥇', 'Veteran — 7+ levels complete');
+
+    const best = results.reduce((m, r) => Math.max(m, r.score || 0), 0);
+    if (best >= 8) addBadge('🏆', 'High Scorer — 8+ in one level');
+    if (best === 10) addBadge('⭐', 'Perfect 10 — flawless level');
+
+    if (percent >= 80 && levelsDone >= 5) addBadge('🔥', 'Hot Streak — strong accuracy');
+
+    const tip = document.getElementById('improveText');
+    if (levelsDone === 0) {
+      tip.textContent = 'Try Level 1 to start earning badges. Aim for speed and accuracy!';
+    } else {
+      const withAcc = results.map(r => ({ ...r, acc: r.total ? r.score / r.total : 0 }));
+      withAcc.sort((a, b) => a.acc - b.acc);
+      const weakest = withAcc[0];
+
+      let advice = [];
+      if (percent < 50) advice.push('Focus on understanding the core meanings first, then speed.');
+      else if (percent < 70) advice.push('You’re close! Review similar slang families to reduce mistakes.');
+      else advice.push('Great accuracy — push for faster decisions and perfect rounds.');
+
+      if (weakest && weakest.total) {
+        advice.push(`Your weakest round was Level ${weakest.level} (${weakest.score}/${weakest.total}). Consider retrying it for a quick win.`);
+      }
+
+      tip.textContent = advice.join(' ');
+    }
+  </script>
+
+  <!-- Chatbot script LAST so it can find the DOM -->
+  <script src="bot.js"></script>
+</body>
+
+</html>
