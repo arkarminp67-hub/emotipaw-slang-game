@@ -1,39 +1,60 @@
-/* script.js — SlangQuest Auth (client-side mock)
-   - Tabs
-   - Validation + localStorage “accounts”
-   - After sign-up, send user to Login (not auto-login)
+/* script.js — EmoTiPaw Auth
+   Single source of truth for login + signup.
+   - Signup: saves to SheetDB (for tracking) + localStorage (for session)
+   - Login:  checks localStorage first, then SheetDB fallback
 */
 
-const $ = (sel, ctx=document) => ctx.querySelector(sel);
-const $$ = (sel, ctx=document) => [...ctx.querySelectorAll(sel)];
+const $ = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
-const toast = (msg, ms=1800) => {
+const SHEETDB_URL = "https://sheetdb.io/api/v1/cy20viq6veajs";
+
+const toast = (msg, ms = 2200) => {
   const el = $('#toast');
   if (!el) return;
   el.textContent = msg;
   el.classList.add('show');
-  setTimeout(()=> el.classList.remove('show'), ms);
+  setTimeout(() => el.classList.remove('show'), ms);
 };
 
-// handy: preserve ?next=... when switching tabs or redirecting to this page
 const nextParam = () => {
   const p = new URLSearchParams(location.search);
   const n = p.get('next');
   return n ? `&next=${encodeURIComponent(n)}` : '';
 };
+
+const redirectNext = () => {
+  const params = new URLSearchParams(location.search);
+  const next = params.get('next') || 'play.html';
+  location.href = next;
+};
+
 const goToTab = (name) => {
-  // reload THIS auth page but on the requested tab, preserving ?next
   const base = location.pathname.split('/').pop() || 'auth.html';
   location.href = `${base}?tab=${name}${nextParam()}`;
 };
 
-// --- Tabs ---
-(function tabs(){
+const DB_KEY  = 'sq.users';
+const CUR_KEY = 'sq.currentUser';
+
+const dbLoad = () => {
+  try { return JSON.parse(localStorage.getItem(DB_KEY) || '[]'); }
+  catch { return []; }
+};
+const dbSave = (arr) => localStorage.setItem(DB_KEY, JSON.stringify(arr));
+
+const setCurrentUser = (email, nickname) => {
+  localStorage.setItem(CUR_KEY, JSON.stringify({ email, nickname, ts: Date.now() }));
+  localStorage.setItem('nickname', nickname);
+};
+
+// Tabs
+(function tabs() {
   const tabsEl = $('.js-tabs');
   if (!tabsEl) return;
   const glider = $('.glider', tabsEl);
   const tabs = $$('.tab', tabsEl);
-  const loginForm = $('#loginForm');
+  const loginForm  = $('#loginForm');
   const signupForm = $('#signupForm');
 
   const activate = (name) => {
@@ -57,8 +78,8 @@ const goToTab = (name) => {
   activate(params.get('tab') === 'signup' ? 'signup' : 'login');
 })();
 
-// --- Password show/hide ---
-(function pwToggles(){
+// Password toggles
+(function pwToggles() {
   $$('.pw-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = document.getElementById(btn.dataset.target);
@@ -69,65 +90,93 @@ const goToTab = (name) => {
   });
 })();
 
-// --- Local storage “DB” helpers ---
-const DB_KEY = 'sq.users';
-const CUR_KEY = 'sq.currentUser';
-
-const dbLoad = () => {
-  try { return JSON.parse(localStorage.getItem(DB_KEY) || '[]'); }
-  catch { return []; }
-};
-const dbSave = (arr) => localStorage.setItem(DB_KEY, JSON.stringify(arr));
-const setCurrent = (email) => localStorage.setItem(CUR_KEY, JSON.stringify({ email, ts: Date.now() }));
-
-const redirectNext = () => {
-  const params = new URLSearchParams(location.search);
-  const next = params.get('next') || 'index.html#play';
-  location.href = next;
-};
-
-// --- Login handler ---
-$('#loginForm')?.addEventListener('submit', (e) => {
+// Sign-up
+$('#signupForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = $('#loginEmail').value.trim().toLowerCase();
-  const pw = $('#loginPassword').value;
 
-  if (!email || pw.length < 6) return toast('Enter a valid email and password (min 6).');
-
-  const users = dbLoad();
-  const u = users.find(x => x.email === email);
-
-  if (!u) {
-    toast('No account found. Please sign up first.');
-    setTimeout(() => goToTab('signup'), 700);
-    return;
-  }
-  if (u.pw !== pw) return toast('Email or password is incorrect.');
-
-  setCurrent(email);
-  toast('Logged in! Redirecting…', 900);
-  setTimeout(redirectNext, 700);
-});
-
-// --- Sign-up handler ---
-$('#signupForm')?.addEventListener('submit', (e) => {
-  e.preventDefault();
   const nickname = $('#suNickname').value.trim();
-  const email = $('#suEmail').value.trim().toLowerCase();
-  const pw = $('#suPassword').value;
-  const confirm = $('#suConfirm').value;
+  const email    = $('#suEmail').value.trim().toLowerCase();
+  const pw       = $('#suPassword').value;
+  const confirm  = $('#suConfirm').value;
 
-  if (!nickname || !email || pw.length < 6) return toast('Fill all fields (password ≥ 6).');
+  if (!nickname || !email || pw.length < 6) return toast('Fill all fields (password min 6 chars).');
   if (pw !== confirm) return toast('Passwords do not match.');
 
   const users = dbLoad();
-  if (users.some(u => u.email === email)) return toast('This email is already registered.');
+  if (users.some(u => u.email === email)) return toast('Email already registered. Please log in.');
 
+  const btn = $('#signupForm .btn[type="submit"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'Creating…'; }
+
+  // SheetDB tracking (fire-and-forget)
+  const now        = new Date();
+  const date       = now.toLocaleDateString();
+  const launchDate = new Date("2025-10-26");
+  const diffWeeks  = Math.floor((now - launchDate) / (1000 * 60 * 60 * 24 * 7)) + 1;
+  const week       = "Week " + diffWeeks;
+
+  fetch(SHEETDB_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: [{ nickname, email, date, week }] })
+  }).catch(() => {});
+
+  // Save locally so login works on any device/session
   users.push({ email, nickname, pw });
   dbSave(users);
+  setCurrentUser(email, nickname);
 
-  // IMPORTANT: do NOT auto-login after sign-up.
-  // Send them to the Login tab so they sign in explicitly.
-  toast('Account created! Please log in.', 1200);
-  setTimeout(() => goToTab('login'), 900);
+  toast('Account created! Redirecting…', 1000);
+  setTimeout(redirectNext, 800);
+});
+
+// Login
+$('#loginForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = $('#loginEmail').value.trim().toLowerCase();
+  const pw    = $('#loginPassword').value;
+
+  if (!email || pw.length < 6) return toast('Enter a valid email and password (min 6 chars).');
+
+  const btn = $('#loginForm .btn[type="submit"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'Logging in…'; }
+  const resetBtn = () => { if (btn) { btn.disabled = false; btn.textContent = 'Log in'; } };
+
+  // Check localStorage first
+  const users = dbLoad();
+  const localUser = users.find(u => u.email === email);
+
+  if (localUser) {
+    if (localUser.pw !== pw) { resetBtn(); return toast('Incorrect password.'); }
+    setCurrentUser(localUser.email, localUser.nickname);
+    toast('Welcome back! Redirecting…', 900);
+    return setTimeout(redirectNext, 700);
+  }
+
+  // Fallback: check SheetDB (user signed up on a different device)
+  try {
+    const res   = await fetch(`${SHEETDB_URL}/search?email=${encodeURIComponent(email)}`);
+    const found = await res.json();
+
+    if (!found || found.length === 0) {
+      resetBtn();
+      toast('No account found. Please sign up first.');
+      return setTimeout(() => goToTab('signup'), 800);
+    }
+
+    const user = found[0];
+    // Cache them locally for future logins
+    users.push({ email: user.email || email, nickname: user.nickname || 'Player', pw });
+    dbSave(users);
+    setCurrentUser(email, user.nickname || 'Player');
+
+    toast('Welcome back! Redirecting…', 900);
+    setTimeout(redirectNext, 700);
+
+  } catch (err) {
+    resetBtn();
+    toast('Could not reach server. Check your connection and try again.');
+    console.error('Login error:', err);
+  }
 });
