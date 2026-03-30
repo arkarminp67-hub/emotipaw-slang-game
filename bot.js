@@ -48,7 +48,7 @@ function matchFAQ(message) {
 }
 
 /* ============ CONFIG — your Gemini key ============ */
-const GEMINI_API_KEY = "AIzaSyAHFA_cq_P4z-SR1iWJmNmyEw6F-3i2bK0";
+const GEMINI_API_KEY = "AIzaSyACOHK3kY3JoosAzXA-I0_HkXvVy3px_p4"; // ←------------------------------------------
 
 const SYSTEM_PROMPT = "You are the EmoTiPaw Bot, a friendly assistant for a web-based English slang learning game. Explain slang words simply with short example sentences. Help with game tips. Keep replies to 2-4 sentences. Only discuss slang, English, or the EmoTiPaw game. Be friendly and fun.";
 
@@ -57,7 +57,7 @@ const SYSTEM_PROMPT = "You are the EmoTiPaw Bot, a friendly assistant for a web-
    gemini-2.5-flash was missing "ver" → URL became "undefined/models/..." → crash
 */
 const GEMINI_MODELS = [
-  { model: "gemini-2.5-flash", ver: "v1beta" }, // ← was missing ver (BUG FIX)
+  { model: "gemini-2.5-flash", ver: "v1beta" }, 
   { model: "gemini-2.0-flash", ver: "v1beta" },
   { model: "gemini-2.0-flash-lite", ver: "v1beta" },
   { model: "gemini-1.5-flash", ver: "v1" },
