@@ -141,69 +141,6 @@
 
   <script src="script.js"></script>
 
-  <!-- Add this tracking script BELOW main JS -->
-  <script>
-    document.getElementById("signupForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const nickname = document.getElementById("suNickname").value;
-      const email = document.getElementById("suEmail").value;
-
-      // Add date & week info
-      const now = new Date();
-      const date = now.toLocaleDateString();
-
-      // 🔹 set launch date
-      const launchDate = new Date("2025-10-26");
-      const diffInMs = now - launchDate;
-      const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7)) + 1;
-      const week = "Week " + diffInWeeks;
-
-      const data = {
-        data: [{
-          nickname: nickname,
-          email: email,
-          date: date,
-          week: week,
-        }]
-      };
-
-      fetch("https://sheetdb.io/api/v1/cy20viq6veajs", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" },
-      });
-      localStorage.setItem("sq.currentUser", JSON.stringify({ nickname }));
-
-    });
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-
-      // fetch user by email
-      fetch(`https://sheetdb.io/api/v1/cy20viq6veajs/search?email=${email}`)
-        .then(res => res.json())
-        .then(users => {
-          if (users.length === 0) {
-            alert("User not found!");
-            return;
-          }
-
-          const user = users[0];
-
-          // ✅ save nickname to localStorage
-          localStorage.setItem("nickname", user.nickname);
-
-          // redirect to game or next page
-          window.location.href = "play.html";
-        })
-        .catch(err => console.error(err));
-    });
-
-  </script>
-
 </body>
 
 </html>
